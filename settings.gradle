@@ -1,0 +1,15 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { name = 'MinecraftForge'; url = 'https://maven.minecraftforge.net/' }
+        maven { url = 'https://maven.parchmentmc.org' }
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+}
+
+// 配置以复用 Artisanal-main 项目的依赖缓存
+// 由于两个项目使用相同的 Gradle 版本和 Minecraft/Forge 版本，依赖会自动复用
+

@@ -1,0 +1,33 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
+logs
+docsOut
+build.log
+temp_fd
+
+# Files from Forge MDK
+forge*changelog.txt
+
+# Project specific
+MINECRAFT_CODE_ANALYSIS.md
+

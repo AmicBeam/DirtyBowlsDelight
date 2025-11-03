@@ -1,0 +1,93 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
+}
+
+version = '1.0.0'
+group = 'com.dirtybowlsdelight'
+
+base {
+    archivesName = 'dirtybowlsdelight'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
+minecraft {
+    mappings channel: 'parchment', version: '2023.06.26-1.20.1'
+    
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            
+            mods {
+                dirtyforeverybowls {
+                    source sourceSets.main
+                }
+            }
+        }
+        
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            
+            mods {
+                dirtyforeverybowls {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    maven { url "https://cursemaven.com" }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:1.20.1-47.1.3"
+    
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    
+    // 添加 FarmersDelight 作为编译依赖（用于 Mixin）
+    // 使用 CurseMaven 自动下载，无需在项目根目录放置 jar 文件
+    // FarmersDelight 项目ID: 398521, 文件ID: 5051242 (对应 1.2.9 版本)
+    compileOnly fg.deobf("curse.maven:farmers-delight-398521:${farmersdelight_version}")
+    
+    // No runtime dependencies needed
+    // We'll get items dynamically at runtime via ForgeRegistries
+}
+
+mixin {
+    add sourceSets.main, 'dirtybowlsdelight.refmap.json'
+    config 'mixins.dirtybowlsdelight.json'
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "dirtybowlsdelight",
+                "Specification-Vendor"    : "AmicBeam",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "AmicBeam",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
