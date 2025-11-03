@@ -6,7 +6,7 @@ license="MIT"
 modId="dirtybowlsdelight"
 version="1.0.0"
 displayName="DirtyBowlsDelight"
-description="Makes all bowl foods return dirty bowls instead of clean bowls. Requires Artisanal mod and FarmersDelight mod."
+description="A TFC Artisanal and FarmersDelight compatibility mod. Makes all bowl foods (including vanilla and FarmersDelight soups) return dirty bowls instead of clean bowls after consumption."
 authors="AmicBeam"
 logoFile="logo.png"
 
