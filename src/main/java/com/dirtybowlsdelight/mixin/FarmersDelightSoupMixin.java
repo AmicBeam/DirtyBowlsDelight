@@ -1,14 +1,13 @@
 package com.dirtybowlsdelight.mixin;
 
 import com.dirtybowlsdelight.DirtyBowls;
+import com.dirtybowlsdelight.DirtyBowlHelper;
 import com.dirtybowlsdelight.SoupConsumptionTracker;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -52,11 +51,10 @@ public abstract class FarmersDelightSoupMixin {
         if (SoupConsumptionTracker.isProcessingSoupConsumption()) {
             ItemStack result = cir.getReturnValue();
 
-            // 如果返回的是碗，则替换为脏碗
+            // 如果返回的是碗，则替换为脏碗（带NBT）
             if (result != null && result.is(Items.BOWL)) {
-                net.minecraft.world.item.Item dirtyBowl = ForgeRegistries.ITEMS.getValue(new ResourceLocation("artisanal", "dirty_bowl"));
-                if (dirtyBowl != null && dirtyBowl != Items.AIR) {
-                    ItemStack dirtyBowlStack = new ItemStack(dirtyBowl, result.getCount());
+                ItemStack dirtyBowlStack = DirtyBowlHelper.createDirtyBowlStack(result);
+                if (dirtyBowlStack != null) {
                     DirtyBowls.LOGGER.info("[FarmersDelightSoupMixin] Replacing bowl with dirty bowl: {} -> {}", result, dirtyBowlStack);
                     cir.setReturnValue(dirtyBowlStack);
                 } else {

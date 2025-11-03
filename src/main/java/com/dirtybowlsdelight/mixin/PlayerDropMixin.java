@@ -1,12 +1,11 @@
 package com.dirtybowlsdelight.mixin;
 
 import com.dirtybowlsdelight.DirtyBowls;
+import com.dirtybowlsdelight.DirtyBowlHelper;
 import com.dirtybowlsdelight.SoupConsumptionTracker;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -30,9 +29,8 @@ public abstract class PlayerDropMixin {
     private ItemStack modifyDroppedItemStack(ItemStack stack) {
         // 检查是否正在处理soup食用（使用共享的状态追踪器）
         if (stack != null && stack.is(Items.BOWL) && SoupConsumptionTracker.isProcessingSoupConsumption()) {
-            net.minecraft.world.item.Item dirtyBowl = ForgeRegistries.ITEMS.getValue(new ResourceLocation("artisanal", "dirty_bowl"));
-            if (dirtyBowl != null && dirtyBowl != Items.AIR) {
-                ItemStack dirtyBowlStack = new ItemStack(dirtyBowl, stack.getCount());
+            ItemStack dirtyBowlStack = DirtyBowlHelper.createDirtyBowlStack(stack);
+            if (dirtyBowlStack != null) {
                 DirtyBowls.LOGGER.info("[PlayerDropMixin] Replacing bowl with dirty bowl from soup consumption (inventory full): {} -> {}", stack, dirtyBowlStack);
                 return dirtyBowlStack;
             } else {
@@ -55,9 +53,8 @@ public abstract class PlayerDropMixin {
     private ItemStack modifyDroppedItemStackThreeParams(ItemStack stack) {
         // 检查是否正在处理soup食用（使用共享的状态追踪器）
         if (stack != null && stack.is(Items.BOWL) && SoupConsumptionTracker.isProcessingSoupConsumption()) {
-            net.minecraft.world.item.Item dirtyBowl = ForgeRegistries.ITEMS.getValue(new ResourceLocation("artisanal", "dirty_bowl"));
-            if (dirtyBowl != null && dirtyBowl != Items.AIR) {
-                ItemStack dirtyBowlStack = new ItemStack(dirtyBowl, stack.getCount());
+            ItemStack dirtyBowlStack = DirtyBowlHelper.createDirtyBowlStack(stack);
+            if (dirtyBowlStack != null) {
                 DirtyBowls.LOGGER.info("[PlayerDropMixin] Replacing bowl with dirty bowl from soup consumption (inventory full, 3 params): {} -> {}", stack, dirtyBowlStack);
                 return dirtyBowlStack;
             } else {

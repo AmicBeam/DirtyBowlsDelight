@@ -1,6 +1,7 @@
 package com.dirtybowlsdelight.mixin;
 
 import com.dirtybowlsdelight.DirtyBowls;
+import com.dirtybowlsdelight.DirtyBowlHelper;
 import com.dirtybowlsdelight.SoupConsumptionTracker;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -53,11 +54,10 @@ public abstract class ItemUsageDebugMixin {
     private ItemStack redirectFinishUsingItemCall(ItemStack itemStack, Level level, LivingEntity entity) {
         ItemStack result = itemStack.finishUsingItem(level, entity);
 
-        // 只有在处理soup且结果是碗时才替换为脏碗
+        // 只有在处理soup且结果是碗时才替换为脏碗（带NBT）
         if (SoupConsumptionTracker.isProcessingSoupConsumption() && result.is(net.minecraft.world.item.Items.BOWL)) {
-            net.minecraft.world.item.Item dirtyBowl = net.minecraftforge.registries.ForgeRegistries.ITEMS.getValue(new net.minecraft.resources.ResourceLocation("artisanal", "dirty_bowl"));
-            if (dirtyBowl != null && dirtyBowl != net.minecraft.world.item.Items.AIR) {
-                ItemStack dirtyBowlStack = new ItemStack(dirtyBowl, result.getCount());
+            ItemStack dirtyBowlStack = DirtyBowlHelper.createDirtyBowlStack(result);
+            if (dirtyBowlStack != null) {
                 DirtyBowls.LOGGER.info("[ItemUsageDebugMixin] Replacing bowl with dirty bowl: {} -> {}", result, dirtyBowlStack);
                 return dirtyBowlStack;
             } else {
