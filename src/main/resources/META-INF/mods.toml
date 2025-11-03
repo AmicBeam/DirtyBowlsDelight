@@ -8,6 +8,7 @@ version="1.0.0"
 displayName="DirtyBowlsDelight"
 description="Makes all bowl foods return dirty bowls instead of clean bowls. Requires Artisanal mod and FarmersDelight mod."
 authors="AmicBeam"
+logoFile="logo.png"
 
 [[dependencies.dirtybowlsdelight]]
     modId="forge"
